@@ -4,13 +4,13 @@
 
 option('xwayland_path',
   type: 'string',
-  value: '/opt/google/cros-containers/bin/Xwayland',
+  value: '/usr/bin/Xwayland',
   description: 'path to Xwayland'
 )
 
 option('xwayland_gl_driver_path',
   type: 'string',
-  value: '/opt/google/cros-containers/lib',
+  value: '/usr/lib',
   description: 'the GL driver path to use for Xwayland'
 )
 

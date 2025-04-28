@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y ninja-build meson pkg-config git make xwayland libwayland-dev libgbm-dev gcc libx11-xcb-dev libsystemd-dev libxcb-composite0-dev libxkbcommon-dev libxrender-dev libxtst-dev libpixman-1-dev libdrm-dev libgtest-dev
+
+      - name: Build
+        run: |
+          cd vm_tools/sommelier
+          meson setup --prefix=/usr ./ build
+          cd build
+          meson compile
+      
+      - name: Archive
+        uses: actions/upload-artifact@v4
+        with:
+          path: vm_tools/sommelier/build/sommelier

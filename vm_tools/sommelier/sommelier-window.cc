@@ -1256,7 +1256,10 @@ void sl_window_update(struct sl_window* window) {
 
   // Always use top-level surface for X11 windows as we can't control when the
   // window is closed.
-  if (ctx->xwayland || !parent) {
+  //
+  // window->managed == 0 seems to indicate context menus, which should
+  // always be rendered as a popup so they can be positioned
+  if ((ctx->xwayland && window->managed) || !parent) {
     if (!window->xdg_toplevel) {
       window->xdg_toplevel = xdg_surface_get_toplevel(window->xdg_surface);
       xdg_toplevel_add_listener(window->xdg_toplevel,
@@ -1329,6 +1332,7 @@ void sl_window_update(struct sl_window* window) {
     xdg_positioner_set_anchor(positioner, XDG_POSITIONER_ANCHOR_TOP_LEFT);
     xdg_positioner_set_gravity(positioner, XDG_POSITIONER_GRAVITY_BOTTOM_RIGHT);
     xdg_positioner_set_anchor_rect(positioner, diffx, diffy, 1, 1);
+    xdg_positioner_set_size(positioner, window->width, window->height);
 
     window->xdg_popup = xdg_surface_get_popup(window->xdg_surface,
                                               parent->xdg_surface, positioner);
